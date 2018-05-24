@@ -8,6 +8,8 @@ class User < ApplicationRecord
   :lat_column_name => :location_lat,
   :lng_column_name => :location_lon
   
+  validates :name, presence: true
+  validates :email, presence: true
 
   enum status: [:rating]
   has_many :reviews, -> { order(created_at: :desc) }
@@ -20,7 +22,8 @@ class User < ApplicationRecord
     self.location_lat  ||= -0.09039        
     self.location_lon ||= 51.51264     
     self.range_to ||= 40 
-    self.rating ||= average_rating
+    self.rating ||= 1
+    self.average_rating ||= av_rating
   end
   #carrierwave upload mounting
   #mount_uploader :avatar, AvatarUploader
@@ -30,9 +33,9 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable
 
-  def average_rating
-    if reviews.count > 0 && (reviews.map(&:rating).compact.sum)/(reviews.map(&:rating).compact.count).round >= 1
-        return (reviews.map(&:rating).compact.sum)/(reviews.map(&:rating).compact.count).round
+  def av_rating
+    if reviews.count > 0 && ((reviews.map(&:rating).compact.sum.to_f)/(reviews.map(&:rating).compact.count)).round >= 1
+        return ((reviews.map(&:rating).compact.sum.to_f)/(reviews.map(&:rating).compact.count)).round
     else 1
     end
   end
@@ -44,4 +47,6 @@ class User < ApplicationRecord
       all
     end
   end
+
+  
 end

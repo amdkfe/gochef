@@ -1,7 +1,4 @@
 
-<p class="notice"><%= notice %></p>
-<p class="alert"><%= alert %></p>
-
 
 <div class="userpage">
 
@@ -61,17 +58,21 @@
     <button class = "button back">
       <%= link_to("Back to the chefs", "/" ) %>
     </button>
-      <div class="bio">
+    <div class="bio">
+      <% if @user.bio %>
         <%= @user.bio.gsub(/\n/, '<br>') %>
-          <section class="reviews">
-          <div class="review">
-             <% if @current_user.name != "guest" && @user != @current_user %>
-              <%= render(:partial => 'reviews/review')%></br>
-              <% else %>
-              <br>
-              <% end %>
-              <%= render(:partial => 'reviews/show') %>
-              </div>
-              </section>
-      </div>
+        <% else %>
+        ** This chef hasn't submitted a bio **
+      <% end %>
+      <section class="reviews">
+        <div class="review">
+          <% if @current_user.name != "guest" && @user != @current_user %>
+            <%= render(:partial => 'reviews/review')%></br>
+          <% else %>
+            <br>
+          <% end %>
+          <%= render(:partial => 'reviews/show') %>
+        </div>
+      </section>
+    </div>
   </div>
